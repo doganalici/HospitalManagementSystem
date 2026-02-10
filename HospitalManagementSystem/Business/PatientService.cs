@@ -10,8 +10,11 @@ namespace HospitalManagementSystem.Business
     public class PatientService
     {
         private List<Patient> _patients = new List<Patient>();
+        private int _idCounter = 1;
+
         public void AddPatient(Patient patient)
         {
+            patient.PatientId = _idCounter++;
             _patients.Add(patient);
         }
         public List<Patient> GetAllPatients()
@@ -40,6 +43,11 @@ namespace HospitalManagementSystem.Business
             {
                 _patients.Remove(patient);
             }
+        }
+
+        public bool PatientExists(int patientId)
+        {
+            return _patients.Any(x => x.PatientId == patientId);
         }
     }
 }

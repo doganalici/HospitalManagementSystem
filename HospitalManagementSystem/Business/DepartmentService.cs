@@ -10,9 +10,11 @@ namespace HospitalManagementSystem.Business
     public class DepartmentService
     {
         private List<Department> _departments = new List<Department>();
+        private int _idCounter = 1;
 
         public void AddDepartment(Department department)
         {
+            department.DepartmentId = _idCounter++;
             _departments.Add(department);
         }
 
@@ -36,6 +38,11 @@ namespace HospitalManagementSystem.Business
             {
                 _departments.Remove(department);
             }
+        }
+
+        public bool DepartmentExists(int departmentId)
+        {
+            return _departments.Any(x => x.DepartmentId == departmentId);
         }
     }
 }
