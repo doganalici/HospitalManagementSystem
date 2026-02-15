@@ -3,24 +3,41 @@
 Bu proje, C# Console uygulaması olarak geliştirilmiş basit bir **Hastane Yönetim Sistemi**dir.  
 Hasta ve doktor kayıtlarının yönetilmesini sağlar.
 
-Proje, katmanlı mimari kullanılarak geliştirilmiştir.
-
 ---
 
 ## 🚀 Özellikler
 
+Uygulama aşağıdaki işlemleri destekler:
+
 ### 👨‍⚕️ Doktor Yönetimi
-- Doktor ekleme
+- Doktor ekleme (Otomatik ID)
 - Doktor listeleme
 - Doktor güncelleme
 - Doktor silme
+- Departman ID ile ilişkilendirme
 
 ### 🧑‍🦱 Hasta Yönetimi
-- Hasta ekleme
+- Hasta ekleme (Otomatik ID)
 - Hasta listeleme
 - Hasta güncelleme
 - Hasta silme
+- Doğum tarihi özel formatla girilir (dd.MM.yyyy)
 
+### 📅 Randevu İşlemleri
+- Randevu ekleme
+- Randevu listeleme
+- Randevu güncelleme
+- Randevu silme
+- Aynı doktor ve saat için çakışma kontrolü
+- Hasta ve doktor kontrolü
+- Tarih formatı: dd.MM.yyyy HH:mm
+
+### 🏢 Departman İşlemleri
+- Departman ekleme
+- Departman listeleme
+- Departman güncelleme
+- Departman silme
+  
 ### 📋 Menü Sistemi
 - Kullanıcı dostu konsol menüsü
 - Hatalı girişlerde uyarı sistemi
@@ -56,7 +73,10 @@ CRUD işlemlerinin yapıldığı servis katmanıdır.
 - AppointmentService
 
 #### Program
-Konsol menüsünün bulunduğu ana dosyadır.
+- Menü sistemi
+- Kullanıcıdan veri alma
+- Validasyonlar
+- Servislerle iletişim
 
 ---
 
@@ -64,8 +84,8 @@ Konsol menüsünün bulunduğu ana dosyadır.
 
 - C#
 - .NET Console Application
-- List<T> veri yapısı
 - LINQ
+- OOP
 
 ---
 
@@ -81,20 +101,40 @@ Konsol menüsünün bulunduğu ana dosyadır.
 7 - Doktor Güncelle<br>
 8 - Doktor Sil<br><br>
 
-9 - Çıkış
+9 - Randevu Ekle<br>
+10 - Randevuları Listele<br>
+11 - Randevu Güncelle<br>
+12 - Randevu Sil<br><br>
+
+13 - Çıkış
 
 ---
 
-🛠️ Geliştirme Planı
+Kullanıcıdan alınan tarihler `DateTime.TryParseExact` ile doğrulanmaktadır.
 
- * Randevu sistemi geliştirme
+---
 
- * Veritabanı entegrasyonu (SQL Server)
+## 🛠️ Teknik Özellikler
 
- * ADO.NET kullanımı
+- ✔️ OOP (Nesne Tabanlı Programlama)
+- ✔️ Katmanlı Mimari
+- ✔️ List<T> ile geçici veri saklama
+- ✔️ ID otomatik üretme
+- ✔️ Giriş doğrulama (TryParse)
+- ✔️ Randevu çakışma kontrolü
+- ✔️ Servisler arası bağımlılık yönetimi
 
- * Exception handling
+---
 
- * Validation işlemleri
+## 🎯 Gelecek Planlar
 
- * Repository Pattern
+İlerleyen aşamalarda yapılması planlananlar:
+
+- [ ] Departman seçim ekranı
+- [ ] Hasta/Doktor ID doğrulama geliştirme
+- [ ] Randevu detaylı kontrol sistemi
+- [ ] ADO.NET ile SQL Server bağlantısı
+- [ ] Veritabanı CRUD işlemleri
+- [ ] MVC/Web arayüz entegrasyonu
+
+---
