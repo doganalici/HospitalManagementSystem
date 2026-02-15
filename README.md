@@ -37,6 +37,7 @@ Uygulama aşağıdaki işlemleri destekler:
 - Departman listeleme
 - Departman güncelleme
 - Departman silme
+- Bağlı doktor kontrolü
 
 ### ⌨️ Kullanıcı Girişi Kontrolleri
 - Hatalı girişlerde tekrar isteme
@@ -108,7 +109,7 @@ Kullanıcı giriş kontrolleri
 - .NET Console Application
 - OOP (Object Oriented Programming)
 - LINQ
-- Katmanlı Mimari
+- Katmanlı Mimari (UI, Business, Entities, Data)
 
 ---
 
@@ -154,13 +155,11 @@ dd.MM.yyyy HH:mm<br>
 
 İlerleyen aşamalarda yapılması planlananlar:
 
-- [x] Katmanlı mimari kurulumu  
-- [x] Hasta/Doktor/Randevu sistemi  
-- [x] Menü sistemi  
-- [ ] Departman yönetimi  
-- [ ] Dosya/Veritabanı kayıt sistemi  
-- [ ] ADO.NET entegrasyonu  
-- [ ] SQL Server bağlantısı  
-
+- [x] Temel CRUD
+- [x] Menü Ayrıştırma
+- [x] Validasyonlar
+- [ ] Randevu detay ekranı
+- [ ] SQL bağlantısı
+- [ ] Raporlama sistemi
 
 ---
