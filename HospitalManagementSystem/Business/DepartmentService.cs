@@ -44,5 +44,15 @@ namespace HospitalManagementSystem.Business
         {
             return _departments.Any(x => x.DepartmentId == departmentId);
         }
+
+        public Department GetById(int Id)
+        {
+            return _departments.FirstOrDefault(x => x.DepartmentId == Id);
+        }
+
+        public bool HasDoctors(int departmentId, List<Doctor> doctors)
+        {
+            return doctors.Any(d => d.DepartmentId == departmentId);
+        }
     }
 }

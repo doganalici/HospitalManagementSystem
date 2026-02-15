@@ -70,5 +70,9 @@ namespace HospitalManagementSystem.Business
                 _appointments.Remove(appointment);
             }
         }
+        public bool AppointmentExists(int appointmentId)
+        {
+            return _appointments.Any(x => x.AppointmentId == appointmentId);
+        }
     }
 }

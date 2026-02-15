@@ -54,7 +54,11 @@
     <Compile Include="Helpers\InputHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\AppointmentMenu.cs" />
+    <Compile Include="UI\DepartmentMenu.cs" />
+    <Compile Include="UI\DoctorMenu.cs" />
     <Compile Include="UI\MenuManager.cs" />
+    <Compile Include="UI\PatientMenu.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
