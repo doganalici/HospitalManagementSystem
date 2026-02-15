@@ -1,6 +1,6 @@
 # 🏥 Hospital Management System (Console App)
 
-Bu proje, C# Console uygulaması olarak geliştirilmiş basit bir **Hastane Yönetim Sistemi**dir.  
+Bu proje, C# Console Application kullanılarak geliştirilmiş basit bir Hastane Yönetim Sistemi uygulamasıdır.
 Hasta ve doktor kayıtlarının yönetilmesini sağlar.
 
 ---
@@ -37,6 +37,11 @@ Uygulama aşağıdaki işlemleri destekler:
 - Departman listeleme
 - Departman güncelleme
 - Departman silme
+
+### ⌨️ Kullanıcı Girişi Kontrolleri
+- Hatalı girişlerde tekrar isteme
+- Tarih ve saat formatı doğrulama
+- Sayısal veri kontrolü
   
 ### 📋 Menü Sistemi
 - Kullanıcı dostu konsol menüsü
@@ -50,33 +55,50 @@ Proje 3 ana katmandan oluşmaktadır:
 
 HospitalManagementSystem<br>
 │<br>
-├── Entities → Veri modelleri<br>
-├── Business → İş kuralları (Service sınıfları)<br>
-└── Program.cs → Menü ve kullanıcı arayüzü<br>
+├── Entities       → Varlık sınıfları (Patient, Doctor, Appointment)<br>
+├── Business       → İş kuralları ve servisler<br>
+├── Helpers        → Input kontrol yardımcıları<br>
+├── UI             → Menü ve kullanıcı arayüzü<br>
+└── Program.cs     → Uygulama başlangıç noktası<br>
+
+---
 
 ### 📁 Katmanlar
 
-#### Entities
-Veri modellerini içerir.
+#### 📌Entities
+Veri modellerini içerir
 
 - Patient
 - Doctor
 - Department
 - Appointment
 
-#### Business
-CRUD işlemlerinin yapıldığı servis katmanıdır.
+#### 📌Business
+CRUD işlemlerinin yapıldığı servis katmanıdır
 
 - PatientService
 - DoctorService
 - DepartmentService
 - AppointmentService
 
-#### Program
-- Menü sistemi
-- Kullanıcıdan veri alma
-- Validasyonlar
-- Servislerle iletişim
+ #### 📌UI
+Kullanıcı arayüzü ve menü yönetimi
+
+- MenuManager
+
+#### 📌Program
+Uygulama başlangıç noktasıdır
+
+- Menü başlatma
+- Servislerin oluşturulması
+- Program akışı
+
+#### 📌Helpers
+Kullanıcı giriş kontrolleri
+
+- InputHelper
+- Tarih / sayı doğrulama
+- Hatalı giriş kontrolü
 
 ---
 
@@ -84,8 +106,9 @@ CRUD işlemlerinin yapıldığı servis katmanıdır.
 
 - C#
 - .NET Console Application
+- OOP (Object Oriented Programming)
 - LINQ
-- OOP
+- Katmanlı Mimari
 
 ---
 
@@ -109,8 +132,9 @@ CRUD işlemlerinin yapıldığı servis katmanıdır.
 13 - Çıkış
 
 ---
-
-Kullanıcıdan alınan tarihler `DateTime.TryParseExact` ile doğrulanmaktadır.
+📅 TARİH FORMATI<br><br>
+dd.MM.yyyy HH:mm<br>
+Örnek: 15.02.2026 14:30
 
 ---
 
@@ -130,11 +154,13 @@ Kullanıcıdan alınan tarihler `DateTime.TryParseExact` ile doğrulanmaktadır.
 
 İlerleyen aşamalarda yapılması planlananlar:
 
-- [ ] Departman seçim ekranı
-- [ ] Hasta/Doktor ID doğrulama geliştirme
-- [ ] Randevu detaylı kontrol sistemi
-- [ ] ADO.NET ile SQL Server bağlantısı
-- [ ] Veritabanı CRUD işlemleri
-- [ ] MVC/Web arayüz entegrasyonu
+- [x] Katmanlı mimari kurulumu  
+- [x] Hasta/Doktor/Randevu sistemi  
+- [x] Menü sistemi  
+- [ ] Departman yönetimi  
+- [ ] Dosya/Veritabanı kayıt sistemi  
+- [ ] ADO.NET entegrasyonu  
+- [ ] SQL Server bağlantısı  
+
 
 ---
