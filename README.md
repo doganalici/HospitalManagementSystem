@@ -1,7 +1,7 @@
 # 🏥 Hospital Management System (Console App)
 
 Bu proje, C# Console Application kullanılarak geliştirilmiş basit bir Hastane Yönetim Sistemi uygulamasıdır.
-Hasta ve doktor kayıtlarının yönetilmesini sağlar.
+Hasta, doktor, departman ve randevu kayıtlarının yönetilmesini sağlar.
 
 ---
 
@@ -25,12 +25,13 @@ Uygulama aşağıdaki işlemleri destekler:
 
 ### 📅 Randevu İşlemleri
 - Randevu ekleme
-- Randevu listeleme
+- Randevu listeleme (Hasta, Doktor ve Departman bilgileriyle)
 - Randevu güncelleme
 - Randevu silme
 - Aynı doktor ve saat için çakışma kontrolü
 - Hasta ve doktor kontrolü
 - Tarih formatı: dd.MM.yyyy HH:mm
+- Randevu listesinde ad-soyad bilgileri büyük harflerle gösterilir
 
 ### 🏢 Departman İşlemleri
 - Departman ekleme
@@ -56,7 +57,7 @@ Proje 3 ana katmandan oluşmaktadır:
 
 HospitalManagementSystem<br>
 │<br>
-├── Entities       → Varlık sınıfları (Patient, Doctor, Appointment)<br>
+├── Entities       → Varlık sınıfları (Patient, Doctor, Department, Appointment)<br>
 ├── Business       → İş kuralları ve servisler<br>
 ├── Helpers        → Input kontrol yardımcıları<br>
 ├── UI             → Menü ve kullanıcı arayüzü<br>
@@ -85,7 +86,11 @@ CRUD işlemlerinin yapıldığı servis katmanıdır
  #### 📌UI
 Kullanıcı arayüzü ve menü yönetimi
 
-- MenuManager
+- MenuManager  
+- AppointmentMenu  
+- PatientMenu  
+- DoctorMenu  
+- DepartmentMenu  
 
 #### 📌Program
 Uygulama başlangıç noktasıdır
@@ -148,6 +153,7 @@ dd.MM.yyyy HH:mm<br>
 - ✔️ Giriş doğrulama (TryParse)
 - ✔️ Randevu çakışma kontrolü
 - ✔️ Servisler arası bağımlılık yönetimi
+- ✔️ Null kontrolü (boş veri önleme)
 
 ---
 
@@ -158,6 +164,9 @@ dd.MM.yyyy HH:mm<br>
 - [x] Temel CRUD
 - [x] Menü Ayrıştırma
 - [x] Validasyonlar
+- [x] Detaylı randevu listeleme
+- [ ] Aynı hasta için aynı saat çakışma engeli
+- [ ] Aynı doktor için saat çakışma engeli
 - [ ] Randevu detay ekranı
 - [ ] SQL bağlantısı
 - [ ] Raporlama sistemi
