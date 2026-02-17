@@ -14,12 +14,14 @@ namespace HospitalManagementSystem.UI
         private AppointmentService _appointmentService;
         private PatientService _patientService;
         private DoctorService _doctorService;
+        private DepartmentService _departmentService;
 
-        public AppointmentMenu(AppointmentService appointmentService, PatientService patientService, DoctorService doctorService)
+        public AppointmentMenu(AppointmentService appointmentService, PatientService patientService, DoctorService doctorService, DepartmentService departmentService)
         {
             _appointmentService = appointmentService;
             _patientService = patientService;
             _doctorService = doctorService;
+            _departmentService = departmentService;
         }
 
         public void AddAppointment()
@@ -99,11 +101,26 @@ namespace HospitalManagementSystem.UI
             {
                 foreach (var a in appointments)
                 {
-                    Console.WriteLine($"Randevu ID : {a.AppointmentId}\n" +
-                        $"Hasta ID : {a.PatientId}\n" +
-                        $"Doktor ID : {a.DoctorId}\n" +
-                        $"Randevu Tarihi : {a.AppointmentDate:dd.MM.yyyy HH:mm}\n" +
-                        $"Randevu Durumu : {(a.Status ? "Aktif" : "Pasif")}");
+                    var patient = _patientService.GetById(a.PatientId);
+                    var doctor = _doctorService.GetById(a.DoctorId);
+                    Department department = null;
+
+                    if (doctor != null)
+                    {
+                        department = _departmentService.GetById(doctor.DepartmentId);
+                    }
+
+
+                    string patientName = patient != null ? $"{patient.FirstName} {patient.LastName}" : "Bilinmeyen Hasta";
+                    string doctorName = doctor != null ? $"{doctor.FirstName} {doctor.LastName}" : "Bilinmeyen Doktor";
+                    string departmentName = department != null ? $"{department.Name}" : "Bilinmeyen Departman";
+
+                    Console.WriteLine($"Randevu ID: {a.AppointmentId}\n" +
+                        $"Hasta: {(patientName).ToUpper()} (ID: {a.PatientId})\n" +
+                        $"Doktor: {(doctorName).ToUpper()} (ID: {a.DoctorId}) \n" +
+                        $"Departman : {departmentName}\n" +
+                        $"Tarih: {a.AppointmentDate:dd.MM.yyyy HH:mm}\n" +
+                        $"Durum: {(a.Status ? "Aktif" : "Pasif")}");
                     Console.WriteLine("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
                 }
             }
@@ -113,12 +130,33 @@ namespace HospitalManagementSystem.UI
         {
             var appointments = _appointmentService.GetAllAppointments();
             Console.WriteLine("\nMEVCUT RANDEVULAR ;");
-            ;
+
+            if (appointments.Count == 0)
+            {
+                Console.WriteLine("Henüz bir randevu eklenmedi.");
+                return;
+            }
+
             foreach (var a in appointments)
             {
-                Console.WriteLine($"{a.AppointmentId} - Hasta ID: {a.PatientId}\n" +
-                    $" Doktor ID: {a.DoctorId}\n" +
-                    $" Tarih: {a.AppointmentDate:dd.MM.yyyy HH:mm}");
+                var patient = _patientService.GetById(a.PatientId);
+                var doctor = _doctorService.GetById(a.DoctorId);
+                Department department = null;
+
+                if (doctor != null)
+                {
+                    department = _departmentService.GetById(doctor.DepartmentId);
+                }
+
+                string patientName = patient != null ? $"{patient.FirstName} {patient.LastName}" : "Bilinmeyen Hasta";
+                string doctorName = doctor != null ? $"{doctor.FirstName} {doctor.LastName}" : "Bilinmeyen Doktor";
+                string departmentName = department != null ? $"{department.Name}" : "Bilinmeyen Departman";
+
+
+                Console.WriteLine($"{a.AppointmentId} - Hasta : {(patientName).ToUpper()}\n" +
+                    $"Doktor : {(doctorName).ToUpper()}\n" +
+                    $"Departman : {departmentName}\n" +
+                    $"Tarih: {a.AppointmentDate:dd.MM.yyyy HH:mm}");
             }
             Console.WriteLine();
         }
@@ -207,7 +245,7 @@ namespace HospitalManagementSystem.UI
 
             foreach (var p in patients)
             {
-                Console.WriteLine($"{p.PatientId} - {p.FirstName} {p.LastName}");
+                Console.WriteLine($"{p.PatientId} - {(p.FirstName + " " + p.LastName).ToUpper()}");
             }
 
             Console.WriteLine();
@@ -227,7 +265,7 @@ namespace HospitalManagementSystem.UI
 
             foreach (var d in doctors)
             {
-                Console.WriteLine($"{d.DoctorId} - {d.FirstName} {d.LastName}");
+                Console.WriteLine($"{d.DoctorId} - {(d.FirstName + " " + d.LastName).ToUpper()}");
             }
 
             Console.WriteLine();

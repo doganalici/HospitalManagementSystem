@@ -29,7 +29,7 @@ namespace HospitalManagementSystem.UI
 
             _patientMenu = new PatientMenu(_patientService);
             _doctorMenu = new DoctorMenu(_doctorService, _departmentService);
-            _appointmentMenu = new AppointmentMenu(_appointmentService, _patientService, _doctorService);
+            _appointmentMenu = new AppointmentMenu(_appointmentService, _patientService, _doctorService, _departmentService);
             _departmentMenu = new DepartmentMenu(_departmentService, _doctorService);
 
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HospitalManagementSystem.Entities;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -81,6 +82,8 @@ namespace HospitalManagementSystem.Helpers
 
             return value;
         }
+
+        
     }
 }
 

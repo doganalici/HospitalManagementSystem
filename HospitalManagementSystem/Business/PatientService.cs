@@ -49,5 +49,10 @@ namespace HospitalManagementSystem.Business
         {
             return _patients.Any(x => x.PatientId == patientId);
         }
+
+        public Patient GetById(int id)
+        {
+            return _patients.FirstOrDefault(p => p.PatientId == id);
+        }
     }
 }

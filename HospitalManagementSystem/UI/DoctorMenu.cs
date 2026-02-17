@@ -76,7 +76,7 @@ namespace HospitalManagementSystem.UI
                 foreach (var d in doctors)
                 {
                     Console.WriteLine($"Doktor ID : {d.DoctorId}\n" +
-                        $"Doktor Adı Soyadı : {d.FirstName} {d.LastName}\n" +
+                        $"Doktor Adı Soyadı : {(d.FirstName + " " + d.LastName).ToUpper()}" +
                         $"Doktor Departman Id : {d.DepartmentId}");
                     Console.WriteLine("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
                 }
@@ -89,7 +89,7 @@ namespace HospitalManagementSystem.UI
             ;
             foreach (var d in doctors)
             {
-                Console.WriteLine($"{d.DoctorId} - {d.FirstName} {d.LastName}\n" +
+                Console.WriteLine($"{d.DoctorId} - {(d.FirstName + " " + d.LastName).ToUpper()}\n" +
                     $"Departman ID: {d.DepartmentId}");
             }
             Console.WriteLine();

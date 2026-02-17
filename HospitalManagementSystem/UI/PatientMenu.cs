@@ -56,7 +56,7 @@ namespace HospitalManagementSystem.UI
                 foreach (var p in patients)
                 {
                     Console.WriteLine($"Hasta ID : {p.PatientId}\n" +
-                        $"Hasta Adı Soyadı : {p.FirstName} {p.LastName}\n" +
+                        $"Hasta Adı Soyadı : {(p.FirstName + " " + p.LastName).ToUpper()}\n" +
                         $"Hasta Telefon Numarası : {p.Phone}\n" +
                         $"Hasta Doğum Tarihi : {p.BirthDate:dd.MM.yyyy}\n" +
                         $"Hasta Cinsiyeti : {p.Gender}");
@@ -71,7 +71,7 @@ namespace HospitalManagementSystem.UI
             ;
             foreach (var p in patients)
             {
-                Console.WriteLine($"{p.PatientId} - {p.FirstName} {p.LastName}\n" +
+                Console.WriteLine($"{p.PatientId} - {(p.FirstName + " " + p.LastName).ToUpper()}\n" +
                     $"Telefon: {p.Phone}\n" +
                     $"Doğum Tarihi: {p.BirthDate:dd.MM.yyyy}\n" +
                     $"Cinsiyeti : {p.Gender}");

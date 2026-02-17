@@ -114,6 +114,5 @@ namespace HospitalManagementSystem.UI
             }
 
         }
-
     }
 }
