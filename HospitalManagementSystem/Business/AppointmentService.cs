@@ -24,23 +24,61 @@ namespace HospitalManagementSystem.Business
 
         public string AddAppointment(Appointment appointment)
         {
-            //Hasta var mı?
-            if (!_patientService.PatientExists(appointment.PatientId))
+            DateTime newStart = appointment.AppointmentDate;
+            DateTime newEnd = newStart.AddMinutes(15);
+
+            // 15 dakikalık slot kontrolü
+            if (appointment.AppointmentDate.Minute % 15 != 0 || appointment.AppointmentDate.Second != 0)
             {
-                return "Hasta Bulunamadı"; // Hasta bulunamadı, randevu eklenmedi
+                return "Randevu sadece 15 dakikalık zaman dilimlerinde alınabilir (00, 15, 30, 45).";
             }
 
-            //Doktor var mı?
-            if (!_doctorService.DoctorExists(appointment.DoctorId))
+            if (appointment.AppointmentDate.DayOfWeek == DayOfWeek.Saturday || appointment.AppointmentDate.DayOfWeek == DayOfWeek.Sunday)
             {
-                return "Doktor Bulunamadı"; // Doktor bulunamadı, randevu eklenmedi
+                return "Randevu günleri sadece hafta içi olabilir!";
             }
 
-            bool conflict = _appointments.Any(a => a.DoctorId == appointment.DoctorId && a.AppointmentDate == appointment.AppointmentDate);
-            if (conflict)
+            // Çalışma saatleri kontrolü
+            DateTime workStart = new DateTime(newStart.Year, newStart.Month, newStart.Day, 9, 0, 0);
+            DateTime workEnd = new DateTime(newStart.Year, newStart.Month, newStart.Day, 17, 0, 0);
+
+            if (newStart < workStart || newEnd > workEnd)
             {
-                return "Bu doktor bu saatte dolu";
+                return "Randevu sadece 09:00 - 17:00 çalışma saatleri içinde olmalıdır!";
             }
+
+            // Doktor çakışma kontrolü
+            bool doctorBusy = _appointments.Any(a =>
+            {
+                if (a.DoctorId != appointment.DoctorId || !a.Status)
+
+                    return false;
+                DateTime existingStart = a.AppointmentDate;
+                DateTime existingEnd = existingStart.AddMinutes(15);
+
+                return newStart < existingEnd && existingStart < newEnd;
+            });
+
+            if (doctorBusy)
+            {
+                return "Bu doktor seçilen tarih ve saatte dolu!";
+            }
+
+            // Hasta çakışma kontrolü
+            bool patientBusy = _appointments.Any(a =>
+            {
+                if (a.PatientId != appointment.PatientId || !a.Status)
+                    return false;
+                DateTime existingStart = a.AppointmentDate;
+                DateTime existingEnd = existingStart.AddMinutes(15);
+                return newStart < existingEnd && existingStart < newEnd;
+            });
+
+            if (patientBusy)
+            {
+                return "Bu hasta seçilen tarih ve saatte başka bir randevuya sahip!";
+            }
+
             appointment.AppointmentId = _idCounter++;
             _appointments.Add(appointment);
             return "OK";
@@ -50,17 +88,76 @@ namespace HospitalManagementSystem.Business
         {
             return _appointments;
         }
-        public void UpdateAppointment(Appointment appointment)
+        public string UpdateAppointment(Appointment appointment)
         {
-            var existingAppointment = _appointments.FirstOrDefault(x => x.AppointmentId == appointment.AppointmentId);
+            var existingAppointment = _appointments
+                .FirstOrDefault(x => x.AppointmentId == appointment.AppointmentId);
 
-            if (existingAppointment != null)
+            if (existingAppointment == null)
+                return "Randevu bulunamadı.";
+
+            if (appointment.AppointmentDate.DayOfWeek == DayOfWeek.Saturday
+    || appointment.AppointmentDate.DayOfWeek == DayOfWeek.Sunday)
             {
-                existingAppointment.PatientId = appointment.PatientId;
-                existingAppointment.DoctorId = appointment.DoctorId;
-                existingAppointment.AppointmentDate = appointment.AppointmentDate;
-                existingAppointment.Status = appointment.Status;
+                return "Randevu günleri sadece hafta içi olabilir!";
             }
+            DateTime newStart = appointment.AppointmentDate;
+            DateTime newEnd = newStart.AddMinutes(15);
+
+            // 15 dakika kontrolü
+            if (appointment.AppointmentDate.Minute % 15 != 0 || appointment.AppointmentDate.Second != 0)
+                return "Randevu sadece 15 dakikalık zaman dilimlerinde alınabilir.";
+
+            // Çalışma saatleri kontrolü
+            DateTime workStart = new DateTime(newStart.Year, newStart.Month, newStart.Day, 9, 0, 0);
+            DateTime workEnd = new DateTime(newStart.Year, newStart.Month, newStart.Day, 17, 0, 0);
+
+            if (newStart < workStart || newEnd > workEnd)
+                return "Randevu çalışma saatleri içinde olmalıdır.";
+
+            // Doktor çakışma kontrolü (kendisi hariç)
+            bool doctorBusy = _appointments.Any(a =>
+            {
+                if (a.AppointmentId == appointment.AppointmentId)
+                    return false;
+
+                if (a.DoctorId != appointment.DoctorId || !a.Status)
+                    return false;
+
+                DateTime existingStart = a.AppointmentDate;
+                DateTime existingEnd = existingStart.AddMinutes(15);
+
+                return newStart < existingEnd && existingStart < newEnd;
+            });
+
+            if (doctorBusy)
+                return "Bu doktor seçilen zaman aralığında dolu!";
+
+            // Hasta çakışma kontrolü (kendisi hariç)
+            bool patientBusy = _appointments.Any(a =>
+            {
+                if (a.AppointmentId == appointment.AppointmentId)
+                    return false;
+
+                if (a.PatientId != appointment.PatientId || !a.Status)
+                    return false;
+
+                DateTime existingStart = a.AppointmentDate;
+                DateTime existingEnd = existingStart.AddMinutes(15);
+
+                return newStart < existingEnd && existingStart < newEnd;
+            });
+
+            if (patientBusy)
+                return "Bu hasta seçilen zaman aralığında başka bir randevuya sahip!";
+
+            // Güncelleme
+            existingAppointment.PatientId = appointment.PatientId;
+            existingAppointment.DoctorId = appointment.DoctorId;
+            existingAppointment.AppointmentDate = appointment.AppointmentDate;
+            existingAppointment.Status = appointment.Status;
+
+            return "OK";
         }
         public void DeleteAppointment(int appointmentId)
         {
