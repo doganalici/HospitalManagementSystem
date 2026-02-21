@@ -32,6 +32,13 @@ Uygulama aşağıdaki işlemleri destekler:
 - Hasta ve doktor kontrolü
 - Tarih formatı: dd.MM.yyyy HH:mm
 - Randevu listesinde ad-soyad bilgileri büyük harflerle gösterilir
+- 15 dakikalık zaman dilimi zorunluluğu (00, 15, 30, 45)
+- Hafta içi randevu kısıtı (Cumartesi & Pazar kapalı)
+- Çalışma saatleri kısıtı (09:00 - 17:00)
+- Doktor için zaman aralığı çakışma kontrolü
+- Hasta için zaman aralığı çakışma kontrolü
+- Güncelleme sırasında çakışma kontrolü
+- Aktif / Pasif randevu durumu (Status kontrolü)
 
 ### 🏢 Departman İşlemleri
 - Departman ekleme
@@ -154,7 +161,12 @@ dd.MM.yyyy HH:mm<br>
 - ✔️ Randevu çakışma kontrolü
 - ✔️ Servisler arası bağımlılık yönetimi
 - ✔️ Null kontrolü (boş veri önleme)
-
+- ✔️ 15 dakikalık slot sistemi
+- ✔️ Zaman aralığı (interval) çakışma algoritması
+- ✔️ Gün / saat validasyonu
+- ✔️ Aktif randevu filtreleme
+- ✔️ Update sırasında güvenli çakışma kontrolü
+  
 ---
 
 ## 🎯 Gelecek Planlar
@@ -165,10 +177,11 @@ dd.MM.yyyy HH:mm<br>
 - [x] Menü Ayrıştırma
 - [x] Validasyonlar
 - [x] Detaylı randevu listeleme
-- [ ] Aynı hasta için aynı saat çakışma engeli
-- [ ] Aynı doktor için saat çakışma engeli
+- [x] Aynı hasta için zaman aralığı çakışma engeli
+- [x] Aynı doktor için zaman aralığı çakışma engeli
 - [ ] Randevu detay ekranı
 - [ ] SQL bağlantısı
 - [ ] Raporlama sistemi
+- [ ] Otomatik uygun saat önerme sistemi
 
 ---
