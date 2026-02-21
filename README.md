@@ -1,7 +1,8 @@
 # 🏥 Hospital Management System (Console App)
 
-Bu proje, C# Console Application kullanılarak geliştirilmiş basit bir Hastane Yönetim Sistemi uygulamasıdır.
-Hasta, doktor, departman ve randevu kayıtlarının yönetilmesini sağlar.
+Bu proje, C# Console Application kullanılarak geliştirilmiş basit bir Hastane Yönetim Sistemi uygulamasıdır.<br>
+Hasta, doktor, departman ve randevu kayıtlarının yönetilmesini sağlar.<br>
+Uygulama gerçek bir randevu sistemi mantığına uygun olarak zaman aralığı çakışma kontrolü, çalışma saatleri, öğle arası ve geçmiş tarih filtreleme gibi iş kurallarını içerir.<br>
 
 ---
 
@@ -10,18 +11,22 @@ Hasta, doktor, departman ve randevu kayıtlarının yönetilmesini sağlar.
 Uygulama aşağıdaki işlemleri destekler:
 
 ### 👨‍⚕️ Doktor Yönetimi
-- Doktor ekleme (Otomatik ID)
-- Doktor listeleme
+- Doktor ekleme (Otomatik ID – Max + 1 mantığı)
+- Doktor listeleme (Departman adı ile birlikte)
 - Doktor güncelleme
 - Doktor silme
 - Departman ID ile ilişkilendirme
+- Aktif / Pasif doktor kontrolü (IsActive)
+- Silme sırasında bağlı randevu kontrolü
+- JSON dosyasına kalıcı kayıt
 
 ### 🧑‍🦱 Hasta Yönetimi
-- Hasta ekleme (Otomatik ID)
+- Hasta ekleme (Otomatik ID – Max + 1 mantığı)
 - Hasta listeleme
 - Hasta güncelleme
 - Hasta silme
 - Doğum tarihi özel formatla girilir (dd.MM.yyyy)
+- JSON dosyasına kalıcı kayıt
 
 ### 📅 Randevu İşlemleri
 - Randevu ekleme
@@ -40,6 +45,7 @@ Uygulama aşağıdaki işlemleri destekler:
 - Aktif / Pasif randevu durumu (Status kontrolü)
 - Tarih formatı: dd.MM.yyyy HH:mm
 - Randevu listesinde ad-soyad bilgileri büyük harflerle gösterilir
+- JSON dosyasına kalıcı kayıt
 
 ### 🏢 Departman İşlemleri
 - Departman ekleme
@@ -56,6 +62,41 @@ Uygulama aşağıdaki işlemleri destekler:
 ### 📋 Menü Sistemi
 - Kullanıcı dostu konsol menüsü
 - Hatalı girişlerde uyarı sistemi
+
+🕒 Zaman Kuralları
+- 15 dakikalık zaman dilimi zorunluluğu (00, 15, 30, 45)
+- Hafta içi randevu kısıtı (Cumartesi & Pazar kapalı)
+- Çalışma saatleri kısıtı (09:00 - 17:00)
+- Öğle arası molası (11:45 - 13:00 arası randevu alınamaz)
+- Geçmiş tarihlere randevu engeli
+- Bugün için geçmiş saatleri otomatik gizleme
+- Güncelleme sırasında tüm kurallar tekrar kontrol edilir
+
+⏰ Akıllı Slot Üretim Sistemi
+- Dinamik 15 dakikalık slot üretimi (09:00 - 17:00)
+- Öğle arası slotları otomatik filtrelenir
+- Hafta sonu slot üretmez
+- Geçmiş saatleri listelemez
+- Mevcut randevulara göre dolu saatleri gizler
+
+🏢 Departman İşlemleri
+- Departman ekleme
+- Departman listeleme
+- Departman Güncelleme
+- Departman Silme
+- Bağlı doktor kontrolü
+- Doktor listelerinde departman adı gösterimi
+
+💾 Veri Kalıcılığı (Persistence)
+- JSON dosyadı kullanılarak veri saklama
+- Program kapatılsa bile veriler korunur
+- Otomatik ID üretimi JSON' daki maksimum ID' ye göre hesaplanır
+- Her işlem sonrası dosya güncellenir
+
+⌨️ Kullanıcı Girişi Kontrolleri
+- Hatalı girişlerde tekrar isteme
+- Tarih ve saat formatı doğrulama
+- Null / boş veri kontrolü
 
 ---
 
@@ -90,6 +131,7 @@ CRUD işlemlerinin yapıldığı servis katmanıdır
 - DoctorService
 - DepartmentService
 - AppointmentService
+  - Tüm iş kuralları burada kontrol edilir
 
  #### 📌UI
 Kullanıcı arayüzü ve menü yönetimi
@@ -111,8 +153,8 @@ Uygulama başlangıç noktasıdır
 Kullanıcı giriş kontrolleri
 
 - InputHelper
-- Tarih / sayı doğrulama
-- Hatalı giriş kontrolü
+- JSON Helper
+- TryParse validasyonları
 
 ---
 
@@ -123,6 +165,7 @@ Kullanıcı giriş kontrolleri
 - OOP (Object Oriented Programming)
 - LINQ
 - Katmanlı Mimari (UI, Business, Entities, Data)
+- JSON Serialization
 
 ---
 
@@ -169,20 +212,9 @@ dd.MM.yyyy HH:mm<br>
 - ✔️ Hafta sonu engelleme
 - ✔️ Geçmiş tarih ve saat filtreleme
 - ✔️ Uygun saat hesaplama motoru
+- ✔️ JSON ile veri kalıcılığı
+- ✔️ Öğle arası filtreleme
+- ✔️ Geçmiş tarih ve saat engelleme
+- ✔️ Geçmiş tarih ve saat engelleme
   
----
-
-## 🎯 Gelecek Planlar
-
-İlerleyen aşamalarda yapılması planlananlar:
-
-- [x] Temel CRUD
-- [x] Menü Ayrıştırma
-- [x] Validasyonlar
-- [x] Detaylı randevu listeleme
-- [x] Aynı hasta için zaman aralığı çakışma engeli
-- [x] Aynı doktor için zaman aralığı çakışma engeli
-- [ ] Dosyaya veri kaydetme (Persistence)
-- [ ] JSON / SQL veri tabanı entegrasyonu
-
 ---
