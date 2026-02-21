@@ -75,9 +75,16 @@ namespace HospitalManagementSystem.UI
             {
                 foreach (var d in doctors)
                 {
-                    Console.WriteLine($"Doktor ID : {d.DoctorId}\n" +
-                        $"Doktor Adı Soyadı : {(d.FirstName + " " + d.LastName).ToUpper()}" +
-                        $"Doktor Departman Id : {d.DepartmentId}");
+                    var department = _departmentService
+        .GetAllDepartments()
+        .FirstOrDefault(x => x.DepartmentId == d.DepartmentId);
+
+                    string departmentName = department != null ? department.Name : "Bilinmiyor";
+
+                    Console.WriteLine(
+                        $"Doktor Adı Soyadı : {(d.FirstName + " " + d.LastName).ToUpper() + " (ID : " + d.DoctorId + ")"}\n" +
+                        $"Departman : {departmentName + " (ID : " + d.DepartmentId + ")"}"
+                    );
                     Console.WriteLine("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
                 }
             }
@@ -89,10 +96,19 @@ namespace HospitalManagementSystem.UI
             ;
             foreach (var d in doctors)
             {
-                Console.WriteLine($"{d.DoctorId} - {(d.FirstName + " " + d.LastName).ToUpper()}\n" +
-                    $"Departman ID: {d.DepartmentId}");
+                var department = _departmentService
+    .GetAllDepartments()
+    .FirstOrDefault(x => x.DepartmentId == d.DepartmentId);
+
+                string departmentName = department != null ? department.Name : "Bilinmiyor";
+
+                Console.WriteLine(
+                    $"Doktor Adı Soyadı : {(d.FirstName + " " + d.LastName).ToUpper() + " (ID : " + d.DoctorId + ")"}\n" +
+                    $"Departman : {departmentName}"
+                );
+                Console.WriteLine("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
+                Console.WriteLine();
             }
-            Console.WriteLine();
         }
 
         public void UpdateDoctor()
@@ -140,7 +156,7 @@ namespace HospitalManagementSystem.UI
         {
             Console.Clear();
             Console.WriteLine("DOKTOR SİLME");
-            Console.WriteLine("------------\n");
+            Console.WriteLine("------------");
 
             ShowDoctorsForSelection();
             int id = InputHelper.ReadInt("Doktor Id : ");

@@ -1,4 +1,5 @@
 ﻿using HospitalManagementSystem.Entities;
+using HospitalManagementSystem.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,17 +10,35 @@ namespace HospitalManagementSystem.Business
 {
     public class PatientService
     {
-        private List<Patient> _patients = new List<Patient>();
+        private List<Patient> _patients;
+        private string _filePath = "patients.json";
         private int _idCounter = 1;
 
+        public PatientService()
+        {
+            _patients = JsonHelper.LoadFromFile<Patient>(_filePath);
+            Console.WriteLine("Constructor çalıştı");
+            Console.WriteLine(_patients == null ? "NULL" : "DOLU");
+        }
         public void AddPatient(Patient patient)
         {
-            patient.PatientId = _idCounter++;
+
+            _patients = JsonHelper.LoadFromFile<Patient>(_filePath);
+
+            if (_patients.Count == 0)
+                patient.PatientId = 1;
+            else
+                patient.PatientId = _patients.Max(x => x.PatientId) + 1;
+
             _patients.Add(patient);
+
+            JsonHelper.SaveToFile(_filePath, _patients);
         }
+
         public List<Patient> GetAllPatients()
         {
             return _patients;
+
         }
 
         public void UpdatePatient(Patient patient)
@@ -34,6 +53,7 @@ namespace HospitalManagementSystem.Business
                 existingPatient.BirthDate = patient.BirthDate;
                 existingPatient.Gender = patient.Gender;
             }
+            JsonHelper.SaveToFile(_filePath, _patients);
         }
         public void DeletePatient(int patientId)
         {
@@ -43,6 +63,7 @@ namespace HospitalManagementSystem.Business
             {
                 _patients.Remove(patient);
             }
+            JsonHelper.SaveToFile(_filePath, _patients);
         }
 
         public bool PatientExists(int patientId)

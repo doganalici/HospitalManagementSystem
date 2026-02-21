@@ -37,12 +37,6 @@ namespace HospitalManagementSystem.UI
                 return;
             }
 
-            if (_doctorService.GetAllDoctors().Count == 0)
-            {
-                Console.WriteLine("Önce doktor eklemelisiniz!");
-                return;
-            }
-
             ShowPatientsForSelection();
             int patientId;
             while (true)
@@ -57,16 +51,57 @@ namespace HospitalManagementSystem.UI
             appointment.PatientId = patientId;
 
 
-            ShowDoctorsForSelection();
+            // Departmanları listele
+            var departments = _departmentService.GetAllDepartments();
+            if (_departmentService.GetAllDepartments().Count == 0)
+            {
+                Console.WriteLine("Önce departman eklemelisiniz!");
+                return;
+            }
+
+            Console.WriteLine("\nMEVCUT DEPARTMANLAR :");
+
+            foreach (var dep in departments)
+            {
+                Console.WriteLine($"{dep.DepartmentId} - {dep.Name}");
+            }
+
+            int departmentId;
+
+            while (true)
+            {
+                departmentId = InputHelper.ReadInt("\nDepartman Id : ");
+
+                if (_departmentService.DepartmentExists(departmentId))
+                    break;
+
+                Console.WriteLine("Geçersiz Departman Id!");
+            }
+
+            var doctors = _doctorService.GetDoctorsByDepartment(departmentId);
+
+            if (doctors.Count == 0)
+            {
+                Console.WriteLine("Bu departmanda doktor bulunamadı!");
+                return;
+            }
+            Console.WriteLine("\nMEVCUT DOKTORLAR :");
+
+            foreach (var doc in doctors)
+            {
+                Console.WriteLine($"{doc.DoctorId} - {doc.FirstName} {doc.LastName}");
+            }
+
             int doctorId;
+
             while (true)
             {
                 doctorId = InputHelper.ReadInt("Doktor Id : ");
-                if (_doctorService.DoctorExists(doctorId))
-                {
+
+                if (doctors.Any(d => d.DoctorId == doctorId))
                     break;
-                }
-                Console.WriteLine("Geçersiz Doktor Id! Lütfen geçerli bir doktor Id giriniz.");
+
+                Console.WriteLine("Geçersiz Doktor Id!");
             }
             appointment.DoctorId = doctorId;
 
@@ -235,7 +270,7 @@ namespace HospitalManagementSystem.UI
         {
             var patients = _patientService.GetAllPatients();
 
-            Console.WriteLine("\nMEVCUT HASTALAR:");
+            Console.WriteLine("MEVCUT HASTALAR:");
 
             if (patients.Count == 0)
             {

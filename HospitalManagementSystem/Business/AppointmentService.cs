@@ -1,4 +1,5 @@
 ﻿using HospitalManagementSystem.Entities;
+using HospitalManagementSystem.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,8 @@ namespace HospitalManagementSystem.Business
 {
     public class AppointmentService
     {
-        private List<Appointment> _appointments = new List<Appointment>();
+        private List<Appointment> _appointments;
+        private string _filePath = "appointments.json";
         private PatientService _patientService;
         private DoctorService _doctorService;
 
@@ -20,10 +22,32 @@ namespace HospitalManagementSystem.Business
         {
             _patientService = patientService;
             _doctorService = doctorService;
+
+            _appointments = JsonHelper.LoadFromFile<Appointment>(_filePath);
+
+            if (_appointments.Any())
+                _idCounter = _appointments.Max(x => x.AppointmentId) + 1;
         }
 
         public string AddAppointment(Appointment appointment)
         {
+            var doctor = _doctorService.GetById(appointment.DoctorId);
+            if (appointment.AppointmentDate <= DateTime.Now)
+            {
+                return "Geçmiş tarihe randevu oluşturulamaz!";
+            }
+
+            if (doctor == null)
+                return "Seçilen doktor bulunamadı.";
+
+            if (!doctor.IsActive)
+                return "Seçilen doktor aktif değil.";
+
+            // Hasta var mı kontrolü
+            if (!_patientService.PatientExists(appointment.PatientId))
+            {
+                return "Seçilen hasta bulunamadı.";
+            }
             DateTime newStart = appointment.AppointmentDate;
             DateTime newEnd = newStart.AddMinutes(15);
 
@@ -45,6 +69,14 @@ namespace HospitalManagementSystem.Business
             if (newStart < workStart || newEnd > workEnd)
             {
                 return "Randevu sadece 09:00 - 17:00 çalışma saatleri içinde olmalıdır!";
+            }
+
+            DateTime lunchStart = new DateTime(newStart.Year, newStart.Month, newStart.Day, 12, 00, 0);
+            DateTime lunchEnd = new DateTime(newStart.Year, newStart.Month, newStart.Day, 13, 0, 0);
+
+            if (newStart < lunchEnd && newEnd > lunchStart)
+            {
+                return "12:00 - 13:00 arası öğle molasıdır. Bu saatlerde randevu alınamaz.";
             }
 
             // Doktor çakışma kontrolü
@@ -81,6 +113,7 @@ namespace HospitalManagementSystem.Business
 
             appointment.AppointmentId = _idCounter++;
             _appointments.Add(appointment);
+            JsonHelper.SaveToFile(_filePath, _appointments);
             return "OK";
         }
 
@@ -90,6 +123,17 @@ namespace HospitalManagementSystem.Business
         }
         public string UpdateAppointment(Appointment appointment)
         {
+            // Doktor var mı kontrolü
+            if (!_doctorService.DoctorExists(appointment.DoctorId))
+            {
+                return "Seçilen doktor bulunamadı.";
+            }
+
+            // Hasta var mı kontrolü
+            if (!_patientService.PatientExists(appointment.PatientId))
+            {
+                return "Seçilen hasta bulunamadı.";
+            }
             var existingAppointment = _appointments
                 .FirstOrDefault(x => x.AppointmentId == appointment.AppointmentId);
 
@@ -115,6 +159,13 @@ namespace HospitalManagementSystem.Business
             if (newStart < workStart || newEnd > workEnd)
                 return "Randevu çalışma saatleri içinde olmalıdır.";
 
+            DateTime lunchStart = new DateTime(newStart.Year, newStart.Month, newStart.Day, 12, 00, 0);
+            DateTime lunchEnd = new DateTime(newStart.Year, newStart.Month, newStart.Day, 13, 0, 0);
+
+            if (newStart < lunchEnd && newEnd > lunchStart)
+            {
+                return "12:00 - 13:00 arası öğle molasıdır. Bu saatlerde randevu alınamaz.";
+            }
             // Doktor çakışma kontrolü (kendisi hariç)
             bool doctorBusy = _appointments.Any(a =>
             {
@@ -156,7 +207,7 @@ namespace HospitalManagementSystem.Business
             existingAppointment.DoctorId = appointment.DoctorId;
             existingAppointment.AppointmentDate = appointment.AppointmentDate;
             existingAppointment.Status = appointment.Status;
-
+            JsonHelper.SaveToFile(_filePath, _appointments);
             return "OK";
         }
         public void DeleteAppointment(int appointmentId)
@@ -166,6 +217,7 @@ namespace HospitalManagementSystem.Business
             {
                 _appointments.Remove(appointment);
             }
+            JsonHelper.SaveToFile(_filePath, _appointments);
         }
         public bool AppointmentExists(int appointmentId)
         {
@@ -186,6 +238,9 @@ namespace HospitalManagementSystem.Business
             DateTime workStart = new DateTime(date.Year, date.Month, date.Day, 9, 0, 0);
             DateTime workEnd = new DateTime(date.Year, date.Month, date.Day, 17, 0, 0);
 
+            DateTime lunchStart = new DateTime(date.Year, date.Month, date.Day, 12, 0, 0);
+            DateTime lunchEnd = new DateTime(date.Year, date.Month, date.Day, 13, 0, 0);
+
             // O doktora ait o günkü aktif randevular
             var doctorAppointments = _appointments
                 .Where(a => a.DoctorId == doctorId
@@ -199,7 +254,13 @@ namespace HospitalManagementSystem.Business
             {
                 DateTime slotEnd = currentSlot.AddMinutes(15);
 
+
                 if (date.Date == DateTime.Today && slotEnd <= DateTime.Now)
+                {
+                    currentSlot = currentSlot.AddMinutes(15);
+                    continue;
+                }
+                if (currentSlot < lunchEnd && slotEnd > lunchStart)
                 {
                     currentSlot = currentSlot.AddMinutes(15);
                     continue;

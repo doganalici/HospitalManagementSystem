@@ -23,7 +23,7 @@ namespace HospitalManagementSystem.UI
             Console.Clear();
             Patient patient = new Patient();
             Console.WriteLine("HASTA EKLEME");
-            Console.WriteLine("------------\n");
+            Console.WriteLine("------------");
 
             patient.FirstName = InputHelper.ReadString("Hasta Adı : ");
 
@@ -46,7 +46,7 @@ namespace HospitalManagementSystem.UI
             var patients = _patientService.GetAllPatients();
 
             Console.WriteLine("HASTA LİSTESİ");
-            Console.WriteLine("-------------\n");
+            Console.WriteLine("-------------");
             if (patients.Count == 0)
             {
                 Console.WriteLine("Henüz bir hasta eklenmedi.");
@@ -75,6 +75,7 @@ namespace HospitalManagementSystem.UI
                     $"Telefon: {p.Phone}\n" +
                     $"Doğum Tarihi: {p.BirthDate:dd.MM.yyyy}\n" +
                     $"Cinsiyeti : {p.Gender}");
+                Console.WriteLine("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
             }
             Console.WriteLine();
         }
@@ -116,7 +117,7 @@ namespace HospitalManagementSystem.UI
         {
             Console.Clear();
             Console.WriteLine("HASTA SİLME");
-            Console.WriteLine("-----------\n");
+            Console.WriteLine("-----------");
 
             ShowPatientsForSelection();
 
