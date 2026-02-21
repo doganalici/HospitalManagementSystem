@@ -56,14 +56,15 @@ namespace HospitalManagementSystem.UI
             Console.WriteLine("9 - Randevu Ekle");
             Console.WriteLine("10 - Randevuları Listele");
             Console.WriteLine("11 - Randevu Güncelle");
-            Console.WriteLine("12 - Randevu Sil\n");
+            Console.WriteLine("12 - Randevu Sil");
+            Console.WriteLine("13 - Uygun Saatleri Görüntüle\n");
 
-            Console.WriteLine("13 - Departman Ekle");
-            Console.WriteLine("14 - Departmanları Listele");
-            Console.WriteLine("15 - Departman Güncelle");
-            Console.WriteLine("16 - Departman Sil\n");
+            Console.WriteLine("14 - Departman Ekle");
+            Console.WriteLine("15 - Departmanları Listele");
+            Console.WriteLine("16 - Departman Güncelle");
+            Console.WriteLine("17 - Departman Sil\n");
 
-            Console.WriteLine("17 - Çıkış");
+            Console.WriteLine("18 - Çıkış");
         }
 
         public static void Clear()
@@ -154,26 +155,31 @@ namespace HospitalManagementSystem.UI
                         break;
 
                     case 13:
-                        _departmentMenu.AddDepartment();
+                        _appointmentMenu.ShowAvailableSlots();
                         Clear();
                         break;
 
                     case 14:
-                        _departmentMenu.ListDepartments();
+                        _departmentMenu.AddDepartment();
                         Clear();
                         break;
 
                     case 15:
-                        _departmentMenu.UpdateDepartment();
+                        _departmentMenu.ListDepartments();
                         Clear();
                         break;
 
                     case 16:
-                        _departmentMenu.DeleteDepartment();
+                        _departmentMenu.UpdateDepartment();
                         Clear();
                         break;
 
                     case 17:
+                        _departmentMenu.DeleteDepartment();
+                        Clear();
+                        break;
+
+                    case 18:
                         Clear();
                         Console.WriteLine("Çıkış yapılıyor...");
                         isRunning = false;

@@ -171,5 +171,57 @@ namespace HospitalManagementSystem.Business
         {
             return _appointments.Any(x => x.AppointmentId == appointmentId);
         }
+
+        public List<DateTime> GetAvailableSlots(int doctorId, DateTime date)
+        {
+            List<DateTime> availableSlots = new List<DateTime>();
+
+            // Hafta sonu kontrolü
+            if (date.DayOfWeek == DayOfWeek.Saturday ||
+                date.DayOfWeek == DayOfWeek.Sunday)
+            {
+                return availableSlots;
+            }
+
+            DateTime workStart = new DateTime(date.Year, date.Month, date.Day, 9, 0, 0);
+            DateTime workEnd = new DateTime(date.Year, date.Month, date.Day, 17, 0, 0);
+
+            // O doktora ait o günkü aktif randevular
+            var doctorAppointments = _appointments
+                .Where(a => a.DoctorId == doctorId
+                            && a.Status
+                            && a.AppointmentDate.Date == date.Date)
+                .ToList();
+
+            DateTime currentSlot = workStart;
+
+            while (currentSlot < workEnd)
+            {
+                DateTime slotEnd = currentSlot.AddMinutes(15);
+
+                if (date.Date == DateTime.Today && slotEnd <= DateTime.Now)
+                {
+                    currentSlot = currentSlot.AddMinutes(15);
+                    continue;
+                }
+
+                bool isBusy = doctorAppointments.Any(a =>
+                {
+                    DateTime existingStart = a.AppointmentDate;
+                    DateTime existingEnd = existingStart.AddMinutes(15);
+
+                    return currentSlot < existingEnd && existingStart < slotEnd;
+                });
+
+                if (!isBusy)
+                {
+                    availableSlots.Add(currentSlot);
+                }
+
+                currentSlot = currentSlot.AddMinutes(15);
+            }
+
+            return availableSlots;
+        }
     }
 }

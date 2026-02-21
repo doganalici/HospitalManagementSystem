@@ -271,5 +271,53 @@ namespace HospitalManagementSystem.UI
             Console.WriteLine();
         }
 
+        public void ShowAvailableSlots()
+        {
+            Console.Clear();
+            ShowDoctorsForSelection();
+            Console.Write("Doktor ID: ");
+            int doctorId = int.Parse(Console.ReadLine());
+
+            Console.Write("Tarih (dd.MM.yyyy): ");
+            DateTime date;
+
+            while (!DateTime.TryParseExact(Console.ReadLine(), "dd.MM.yyyy", null,
+                   System.Globalization.DateTimeStyles.None, out date))
+            {
+                Console.Write("Hatalı format! Tekrar giriniz (dd.MM.yyyy): ");
+            }
+
+            if (date.Date < DateTime.Today)
+            {
+                Console.WriteLine("Geçmiş tarihler için randevu görüntülenemez!");
+                return;
+            }
+
+            var slots = _appointmentService.GetAvailableSlots(doctorId, date);
+
+            bool hasAppointmentThatDay = _appointmentService
+        .GetAllAppointments()
+        .Any(a => a.DoctorId == doctorId
+                  && a.Status
+                  && a.AppointmentDate.Date == date.Date);
+
+            if (!hasAppointmentThatDay)
+            {
+                Console.WriteLine("Bu tarihte henüz randevu yok. Tüm saatler boş.");
+            }
+
+            if (!slots.Any())
+            {
+                Console.WriteLine("Uygun saat bulunamadı.");
+                return;
+            }
+
+            Console.WriteLine("Uygun Saatler:");
+            foreach (var slot in slots)
+            {
+                Console.WriteLine(slot.ToString("HH:mm"));
+            }
+        }
+
     }
 }
